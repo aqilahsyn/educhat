@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-
     protected $fillable = [
-        'clo_id',
-        'title',
-        'content',
-        'source_url',
-        // 'embedding', // kalau nanti pakai pgvector (PostgreSQL)
+        'clo_id', 'title', 'description',
     ];
 
     public function clo()
     {
         return $this->belongsTo(Clo::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(MaterialFile::class);
     }
 }

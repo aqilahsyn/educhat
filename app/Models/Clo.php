@@ -6,8 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Clo extends Model
 {
-    protected $fillable=['course_id','code','title','outcome_text','tags'];
-protected $casts=['tags'=>'array'];
-public function course(){ return $this->belongsTo(Course::class); }
-public function materials(){ return $this->hasMany(Material::class); }
+    protected $fillable = [
+        'course_id', 'title', 'description', 'summary', 'order',
+    ];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function materials()
+    {
+        return $this->hasMany(Material::class);
+    }
+
+    public function chatSessions()
+    {
+        return $this->hasMany(ChatSession::class);
+    }
 }
