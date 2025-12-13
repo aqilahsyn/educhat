@@ -149,4 +149,128 @@ document.querySelectorAll(".suggest-msg").forEach(btn => {
 
         document.getElementById("chatInput").dispatchEvent(sendEvent);
     });
+
+    const dropzone   = document.getElementById("dropzone");
+  const fileInput  = document.getElementById("fileInput");
+  const browseBtn  = document.getElementById("browseBtn");
+  const fileGrid   = document.getElementById("fileGrid");
+  const emptyState = document.getElementById("emptyState");
+
+  if (!dropzone || !fileInput || !fileGrid || !emptyState) return;
+
+  const filesState = []; // simpan File object (dummy)
+
+  const refreshEmptyState = () => {
+    emptyState.style.display = filesState.length ? "none" : "block";
+  };
+
+  const truncateName = (name, max = 14) => {
+    if (name.length <= max) return name;
+    const parts = name.split(".");
+    const ext = parts.length > 1 ? "." + parts.pop() : "";
+    const base = parts.join(".");
+    return base.slice(0, max) + "…" + ext;
+  };
+
+  const renderFileItem = (file, index) => {
+    const item = document.createElement("div");
+    item.className = "group flex flex-col items-center gap-2";
+
+    // icon
+    const icon = document.createElement("div");
+    icon.className =
+      "w-12 h-12 rounded-2xl bg-white/70 dark:bg-slate-800 flex items-center justify-center border border-slate-200/60 dark:border-slate-700";
+    icon.textContent = "📕"; // pdf-ish
+
+    // name
+    const label = document.createElement("p");
+    label.className = "text-[11px] text-slate-700 dark:text-slate-200 text-center break-words";
+    label.textContent = truncateName(file.name, 16);
+
+    // remove button (muncul saat hover)
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className =
+      "mt-1 text-[10px] px-2 py-1 rounded-full border border-slate-200 dark:border-slate-700 " +
+      "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 opacity-0 group-hover:opacity-100 transition";
+    remove.textContent = "Hapus";
+    remove.addEventListener("click", () => {
+      filesState.splice(index, 1);
+      rerenderGrid();
+    });
+
+    item.appendChild(icon);
+    item.appendChild(label);
+    item.appendChild(remove);
+    return item;
+  };
+
+  const rerenderGrid = () => {
+    fileGrid.innerHTML = "";
+    filesState.forEach((f, i) => fileGrid.appendChild(renderFileItem(f, i)));
+    refreshEmptyState();
+  };
+
+  const addFiles = (fileList) => {
+    const incoming = Array.from(fileList || []);
+    if (!incoming.length) return;
+
+    // filter sederhana (optional)
+    const allowed = [".pdf", ".ppt", ".pptx", ".doc", ".docx"];
+    const filtered = incoming.filter(f => {
+      const lower = f.name.toLowerCase();
+      return allowed.some(ext => lower.endsWith(ext));
+    });
+
+    // push ke state
+    filtered.forEach(f => filesState.push(f));
+
+    rerenderGrid();
+  };
+
+  // klik "Pilih File"
+  if (browseBtn) {
+    browseBtn.addEventListener("click", () => fileInput.click());
+  }
+
+  // input change
+  fileInput.addEventListener("change", (e) => {
+    addFiles(e.target.files);
+    fileInput.value = ""; // reset
+  });
+
+  // drag states
+  const setActive = (active) => {
+    if (active) {
+      dropzone.classList.add("ring-4", "ring-[#9D1535]/10");
+      dropzone.classList.add("bg-[#FFF7F7]");
+    } else {
+      dropzone.classList.remove("ring-4", "ring-[#9D1535]/10");
+      dropzone.classList.remove("bg-[#FFF7F7]");
+    }
+  };
+
+  dropzone.addEventListener("dragenter", (e) => {
+    e.preventDefault();
+    setActive(true);
+  });
+
+  dropzone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    setActive(true);
+  });
+
+  dropzone.addEventListener("dragleave", () => setActive(false));
+
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    setActive(false);
+    addFiles(e.dataTransfer.files);
+  });
+
+  // init
+  refreshEmptyState();
+
+
+
 });

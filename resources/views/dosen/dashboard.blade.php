@@ -94,18 +94,20 @@
         </p>
     </div>
 
+    
     {{-- HEADER DAFTAR MATERI + BUTTON --}}
     <div class="mt-8 flex items-center justify-between">
         <p class="text-sm font-semibold text-slate-900 dark:text-slate-50">
             Daftar Materi
         </p>
 
-        <button type="button"
-                class="inline-flex items-center gap-2 px-5 h-11 rounded-2xl bg-[#9D1535] text-white font-semibold text-sm shadow-sm hover:bg-[#82112c] transition">
+        <a href="{{ route('dosen.materi.create', ['clo' => $activeClo]) }}"
+        class="inline-flex items-center gap-2 px-5 h-11 rounded-2xl bg-[#9D1535] text-white font-semibold text-sm shadow-sm hover:bg-[#82112c] transition">
             <span class="text-lg leading-none">＋</span>
             Tambah Materi
-        </button>
+        </a>
     </div>
+
 
     {{-- TABLE --}}
     <div class="mt-4 overflow-hidden rounded-2xl border border-slate-200/70 dark:border-slate-800">

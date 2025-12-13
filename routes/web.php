@@ -65,7 +65,7 @@ Route::get('/history', function () {
     return view('student.history');
 })->name('history');
 
-// Profile
+// Profile (gada sebenernya wkwk)
 Route::get('/profile', function () {
     return view('student.profile');
 })->name('profile');
@@ -80,9 +80,25 @@ Route::get('/history', [HistoryController::class, 'index'])->name('history');
 Route::get('/history/{id}', [HistoryController::class, 'show'])->name('history.show');
 
 
+// ------------------ DOSEN PAGES (TANPA AUTH DULU) ------------------
 
 Route::prefix('dosen')->name('dosen.')->group(function () {
-    Route::view('/dashboard', 'dosen.dashboard')->name('dashboard');
-    Route::view('/course', 'dosen.course')->name('course'); // kelola 1 mata kuliah
+
+    // dashboard dosen (kalau belum)
+    Route::get('/dashboard', function () {
+        return view('dosen.dashboard');
+    })->name('dashboard');
+
+    // halaman tambah materi per CLO (dummy frontend)
+    Route::get('/materi/create/{clo}', function ($clo) {
+        $clo = (int) $clo;
+        if (!in_array($clo, [1,2,3])) $clo = 1;
+
+        return view('dosen.materi-create', [
+            'courseName' => 'Strategi Algoritma',
+            'clo' => $clo,
+        ]);
+    })->name('materi.create');
 });
+
 
