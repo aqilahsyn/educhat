@@ -271,6 +271,93 @@ document.querySelectorAll(".suggest-msg").forEach(btn => {
   // init
   refreshEmptyState();
 
-
-
 });
+
+// ===== DOSEN MATERI CREATE: Dropzone =====
+const dropzone = document.getElementById("dropzone");
+const fileInput = document.getElementById("fileInput");
+const fileGrid = document.getElementById("fileGrid");
+const emptyHint = document.getElementById("emptyHint");
+
+if (dropzone && fileInput && fileGrid && emptyHint) {
+  const filesState = []; // frontend state
+
+  const render = () => {
+    fileGrid.innerHTML = "";
+
+    if (filesState.length === 0) {
+      emptyHint.classList.remove("hidden");
+      return;
+    }
+    emptyHint.classList.add("hidden");
+
+    filesState.forEach((file, idx) => {
+      const item = document.createElement("div");
+      item.className = "flex flex-col items-center text-center gap-2";
+
+      item.innerHTML = `
+        <div class="w-12 h-12 flex items-center justify-center">
+          <span class="text-4xl">📕</span>
+        </div>
+        <p class="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate w-full" title="${file.name}">
+          ${file.name}
+        </p>
+        <button type="button"
+                class="text-xs text-rose-600 hover:underline"
+                data-remove="${idx}">
+          Hapus
+        </button>
+      `;
+
+      fileGrid.appendChild(item);
+    });
+
+    // remove handler
+    fileGrid.querySelectorAll("[data-remove]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = parseInt(btn.getAttribute("data-remove"), 10);
+        filesState.splice(i, 1);
+        render();
+      });
+    });
+  };
+
+  const addFiles = (fileList) => {
+    const incoming = Array.from(fileList);
+
+    // filter PDF saja
+    const pdfs = incoming.filter(f => f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf"));
+
+    // “simulate upload loading” kecil
+    pdfs.forEach(f => filesState.push(f));
+    render();
+  };
+
+  // click dropzone => open file picker
+  dropzone.addEventListener("click", () => fileInput.click());
+
+  // select via input
+  fileInput.addEventListener("change", (e) => {
+    addFiles(e.target.files);
+    // reset supaya pilih file sama masih kebaca
+    fileInput.value = "";
+  });
+
+  // drag events
+  dropzone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropzone.classList.add("ring-4", "ring-[#9D1535]/10");
+  });
+
+  dropzone.addEventListener("dragleave", () => {
+    dropzone.classList.remove("ring-4", "ring-[#9D1535]/10");
+  });
+
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("ring-4", "ring-[#9D1535]/10");
+    addFiles(e.dataTransfer.files);
+  });
+
+  render();
+}

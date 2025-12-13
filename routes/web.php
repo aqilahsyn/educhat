@@ -82,23 +82,19 @@ Route::get('/history/{id}', [HistoryController::class, 'show'])->name('history.s
 
 // ------------------ DOSEN PAGES (TANPA AUTH DULU) ------------------
 
+use App\Http\Controllers\Dosen\DashboardController;
+use App\Http\Controllers\Dosen\MateriController;
+
 Route::prefix('dosen')->name('dosen.')->group(function () {
 
-    // dashboard dosen (kalau belum)
-    Route::get('/dashboard', function () {
-        return view('dosen.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // halaman tambah materi per CLO (dummy frontend)
-    Route::get('/materi/create/{clo}', function ($clo) {
-        $clo = (int) $clo;
-        if (!in_array($clo, [1,2,3])) $clo = 1;
+    // halaman tambah materi (per CLO)
+    Route::get('/materi/create', [MateriController::class, 'create'])->name('materi.create');
 
-        return view('dosen.materi-create', [
-            'courseName' => 'Strategi Algoritma',
-            'clo' => $clo,
-        ]);
-    })->name('materi.create');
+    // nanti kalau sudah pakai DB + upload beneran
+    Route::post('/materi', [MateriController::class, 'store'])->name('materi.store');
 });
+
 
 

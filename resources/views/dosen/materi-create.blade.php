@@ -1,111 +1,99 @@
-{{-- resources/views/dosen/materi-create.blade.php --}}
 @extends('layouts.dosen')
 
 @section('title', 'Tambah Materi - EduChat')
 
 @section('content')
-<div class="flex min-h-screen bg-[#F4F7FB] dark:bg-slate-950">
+@php
+    // frontend dummy list (anggap sudah pernah upload)
+    $existingFiles = []; // isi kalau mau contoh awal
+@endphp
 
-    {{-- content wrapper --}}
-    <main class="flex-1 px-10 py-8">
-        <div class="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 shadow-sm p-10">
+<div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm p-10">
+    <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-50">
+        Tambah Materi
+    </h1>
 
-            <h1 class="text-3xl font-semibold text-slate-900 dark:text-slate-50">
-                Tambah Materi
-            </h1>
+    <div class="mt-3 flex items-center gap-2">
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+            {{ $courseTitle }}
+        </span>
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700">
+            CLO {{ $clo }}
+        </span>
+    </div>
 
-            <div class="mt-4 flex items-center gap-2">
-                <span class="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-200">
-                    {{ $courseName ?? 'Strategi Algoritma' }}
-                </span>
-                <span class="text-xs px-3 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-200">
-                    CLO {{ $clo ?? 1 }}
-                </span>
-            </div>
+    {{-- FORM (dummy dulu) --}}
+    <form action="{{ route('dosen.materi.store') }}" method="POST" enctype="multipart/form-data" class="mt-6">
+        @csrf
 
-            {{-- judul materi --}}
-            <div class="mt-8">
-                <label class="block text-sm font-semibold text-slate-900 dark:text-slate-50">
-                    Judul Materi
-                </label>
-                <input
-                    type="text"
-                    class="mt-3 w-full max-w-2xl rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm outline-none focus:ring-4 focus:ring-[#9D1535]/10"
-                    placeholder="Masukkan judul materi..."
-                />
-            </div>
+        <input type="hidden" name="clo" value="{{ $clo }}">
 
-            {{-- file yang telah terunggah --}}
-            <div class="mt-7">
-                <p class="text-sm font-semibold text-slate-900 dark:text-slate-50">
-                    File yang telah terunggah
-                </p>
-
-                <div id="uploadedBox"
-                     class="mt-3 rounded-2xl border border-slate-100 dark:border-slate-800 bg-[#F3F6FF] dark:bg-slate-900/50 p-4 min-h-[160px]">
-                    {{-- grid preview file --}}
-                    <div id="fileGrid"
-                         class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
-                        {{-- item preview akan di-inject via JS --}}
-                    </div>
-
-                    {{-- empty state --}}
-                    <div id="emptyState"
-                         class="text-xs text-slate-500 dark:text-slate-400 mt-2">
-                        Belum ada file. Drag & drop ke kotak upload di bawah untuk menambahkan.
-                    </div>
-                </div>
-            </div>
-
-            {{-- dropzone --}}
-            <div class="mt-5">
-                <input id="fileInput" type="file" class="hidden" multiple accept=".pdf,.ppt,.pptx,.doc,.docx" />
-
-                <div id="dropzone"
-                     class="rounded-2xl border border-dashed border-slate-400/70 dark:border-slate-600
-                            bg-white dark:bg-slate-900
-                            h-[320px] flex items-center justify-center text-center
-                            transition">
-                    <div class="flex flex-col items-center gap-2">
-                        <div class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                            📄
-                        </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">
-                            Upload File disini atau drag file kesini
-                        </p>
-
-                        <button id="browseBtn"
-                                type="button"
-                                class="mt-2 text-xs font-semibold px-4 py-2 rounded-full
-                                       border border-slate-200 dark:border-slate-700
-                                       hover:bg-slate-50 dark:hover:bg-slate-800">
-                            Pilih File
-                        </button>
-                    </div>
-                </div>
-
-                <p class="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
-                    *Frontend-only: file tidak benar-benar tersimpan ke server dulu. Nanti tinggal sambungkan ke backend.
-                </p>
-            </div>
-
-            {{-- actions --}}
-            <div class="mt-10 flex items-center justify-center gap-6">
-                <button id="saveBtn"
-                        type="button"
-                        class="h-12 w-[320px] rounded-2xl bg-[#9D1535] text-white font-semibold text-sm
-                               shadow-sm hover:bg-[#7f102b] transition">
-                    Simpan dan tampilkan
-                </button>
-
-                <a href="{{ route('dosen.dashboard') }}"
-                   class="h-12 w-[320px] rounded-2xl bg-slate-300/80 text-slate-700 font-semibold text-sm
-                          flex items-center justify-center hover:bg-slate-300 transition">
-                    Kembali
-                </a>
-            </div>
-
+        {{-- Judul --}}
+        <div>
+            <label class="block text-sm font-semibold text-slate-900 dark:text-slate-50 mb-2">
+                Judul Materi
+            </label>
+            <input
+                type="text"
+                name="judul"
+                placeholder="Masukkan judul materi..."
+                class="w-full max-w-2xl h-11 rounded-2xl border border-slate-300 dark:border-slate-700
+                       bg-white dark:bg-slate-950/30 px-4 text-sm outline-none
+                       focus:ring-4 focus:ring-[#9D1535]/10 focus:border-[#9D1535]">
         </div>
-    </main>
+
+        {{-- Kotak biru: file yang sudah “masuk” --}}
+        <div class="mt-6">
+            <p class="text-sm font-semibold text-slate-900 dark:text-slate-50 mb-3">
+                File yang telah terunggah
+            </p>
+
+            <div id="uploadedBox"
+                 class="rounded-2xl border border-slate-200/70 dark:border-slate-800 bg-[#F5F8FF] dark:bg-slate-800/30
+                        p-6 min-h-[160px]">
+                <div id="fileGrid" class="grid grid-cols-6 gap-6">
+                    {{-- akan diisi via JS --}}
+                </div>
+
+                <p id="emptyHint" class="text-sm text-slate-400">
+                    Belum ada file. Drop PDF ke area upload di bawah ya.
+                </p>
+            </div>
+        </div>
+
+        {{-- Dropzone garis putus-putus --}}
+        <div class="mt-4">
+            <label class="block text-sm font-semibold text-slate-900 dark:text-slate-50 mb-3">
+                Upload PDF
+            </label>
+
+            <div id="dropzone"
+                 class="rounded-2xl border border-dashed border-slate-400/70 dark:border-slate-600
+                        h-[220px] flex items-center justify-center text-slate-400
+                        hover:bg-slate-50 dark:hover:bg-slate-950/30 transition cursor-pointer">
+                <div class="text-center">
+                    <div class="text-lg">📄</div>
+                    <p class="mt-2 text-sm">Upload file disini atau drag file kesini</p>
+                    <p class="mt-1 text-xs">Format: PDF</p>
+                </div>
+            </div>
+
+            {{-- input file asli (hidden) --}}
+            <input id="fileInput" type="file" name="files[]" class="hidden" multiple accept="application/pdf">
+        </div>
+
+        {{-- Buttons --}}
+        <div class="mt-10 flex items-center justify-center gap-6">
+            <button type="submit"
+                    class="w-[340px] h-12 rounded-2xl bg-[#9D1535] text-white font-semibold shadow-sm hover:bg-[#82112c] transition">
+                Simpan dan tampilkan
+            </button>
+
+            <a href="{{ route('dosen.dashboard', ['clo' => $clo]) }}"
+               class="w-[340px] h-12 rounded-2xl bg-slate-300 text-white font-semibold flex items-center justify-center hover:bg-slate-400 transition">
+                Kembali
+            </a>
+        </div>
+    </form>
 </div>
 @endsection
