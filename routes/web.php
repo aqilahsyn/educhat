@@ -78,3 +78,11 @@ Route::post('/logout', function () {
 
 Route::get('/history', [HistoryController::class, 'index'])->name('history');
 Route::get('/history/{id}', [HistoryController::class, 'show'])->name('history.show');
+
+
+
+Route::prefix('dosen')->name('dosen.')->group(function () {
+    Route::view('/dashboard', 'dosen.dashboard')->name('dashboard');
+    Route::view('/course', 'dosen.course')->name('course'); // kelola 1 mata kuliah
+});
+

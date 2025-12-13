@@ -1,5 +1,5 @@
 {{-- resources/views/student/chat.blade.php --}}
-@extends('student.layout')
+@extends('layouts.student')
 
 @section('title', 'Percakapan Pembelajaran - EduChat')
 

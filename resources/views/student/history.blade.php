@@ -1,8 +1,8 @@
-@extends('student.layout')
+@extends('layouts.student')
 
 @section('title', 'Riwayat Percakapan - EduChat')
 
-@section('middle_sidebar')
+@section('sidebar_secondary')
     @include('student.partials.history-list')
 @endsection
 

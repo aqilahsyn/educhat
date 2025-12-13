@@ -1,5 +1,5 @@
 {{-- resources/views/student/dashboard.blade.php --}}
-@extends('student.layout')
+@extends('layouts.student')
 
 @section('title', 'Dashboard - EduChat')
 

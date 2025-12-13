@@ -1,5 +1,5 @@
 {{-- resources/views/student/course-detail.blade.php --}}
-@extends('student.layout')
+@extends('layouts.student')
 
 @section('title', 'Detail Mata Kuliah - EduChat')
 
