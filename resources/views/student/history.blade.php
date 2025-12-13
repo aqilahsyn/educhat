@@ -1,5 +1,13 @@
-{{-- resources/views/student/history.blade.php --}}
+@extends('student.layout')
 
+@section('title', 'Riwayat Percakapan - EduChat')
+
+@section('middle_sidebar')
+    @include('student.partials.history-list')
+@endsection
+
+@section('content')
+ 
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -16,78 +24,6 @@
 <body class="min-h-screen bg-[#F4F7FB] font-sans text-slate-900 dark:bg-slate-950 dark:text-slate-100">
 
 <div class="flex h-screen">
-
-    {{-- 1) SIDEBAR IKON KIRI --}}
-    <aside class="flex flex-col items-center justify-between w-16 bg-white dark:bg-slate-900 shadow-[0_10px_35px_rgba(15,23,42,0.10)]">
-        <div class="mt-6 flex flex-col items-center gap-6">
-            <div class="w-10 h-10 rounded-2xl bg-[#B8352E]/10 flex items-center justify-center text-xs font-semibold text-[#B8352E]">
-                &lt;/&gt;
-            </div>
-
-            <nav class="flex flex-col items-center gap-4 mt-4">
-                {{-- Learning Path --}}
-                <a href="{{ route('dashboard') }}"
-                   class="w-9 h-9 rounded-xl flex items-center justify-center text-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
-                    <span class="text-base">📚</span>
-                </a>
-
-                {{-- History (AKTIF) --}}
-                <a href="{{ route('history') }}"
-                   class="w-9 h-9 rounded-xl flex items-center justify-center text-lg bg-[#B8352E] text-white shadow-sm">
-                    <span class="text-base">💬</span>
-                </a>
-            </nav>
-        </div>
-
-        <div class="mb-6 flex flex-col items-center gap-4 text-slate-400 dark:text-slate-300">
-            <button id="darkModeToggle"
-                    class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800">
-                <span class="text-lg">🌙</span>
-            </button>
-            <button class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800">
-                <span class="text-lg">🌐</span>
-            </button>
-
-            <div class="w-9 h-9 rounded-2xl bg-[#B8352E] flex items-center justify-center overflow-hidden">
-                <span class="text-xs font-semibold text-white">AH</span>
-            </div>
-        </div>
-    </aside>
-
-    {{-- 2) SIDEBAR KHUSUS HISTORY --}}
-    <aside class="w-80 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col">
-        <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
-            <h1 class="text-sm font-semibold text-[#B8352E]">
-                Riwayat Percakapan
-            </h1>
-        </div>
-
-        <div class="flex-1 overflow-y-auto">
-            @foreach($sessions as $session)
-                @php
-                    $active = $activeSession['id'] === $session['id'];
-                @endphp
-
-                <a href="{{ route('history.show', $session['id']) }}"
-                   class="flex items-center gap-3 px-6 py-4 border-b border-slate-100 dark:border-slate-800
-                          {{ $active ? 'bg-[#B8352E] text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-800/60' }}">
-                    <div class="w-7 h-7 rounded-full flex items-center justify-center
-                                {{ $active ? 'bg-white/15' : 'bg-[#B8352E]/10' }}">
-                        <span class="text-xs {{ $active ? 'text-white' : 'text-[#B8352E]' }}">💬</span>
-                    </div>
-
-                    <div class="flex flex-col">
-                        <span class="text-sm font-medium {{ $active ? 'text-white' : 'text-slate-900 dark:text-slate-50' }}">
-                            {{ $session['title'] }}
-                        </span>
-                        <span class="text-xs {{ $active ? 'text-white/80' : 'text-slate-500 dark:text-slate-400' }}">
-                            {{ $session['subtitle'] }}
-                        </span>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-    </aside>
 
     {{-- 3) KOLOM TENGAH: CHAT --}}
     <main class="flex-1 flex flex-col border-r border-slate-100 dark:border-slate-800 px-8 py-6">
@@ -198,3 +134,4 @@
 
 </body>
 </html>
+@endsection

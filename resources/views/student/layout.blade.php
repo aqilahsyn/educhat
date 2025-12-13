@@ -18,8 +18,13 @@
     {{-- Sidebar ikon (kiri paling) --}}
     @include('student.partials.sidebar')
 
-    {{-- Learning Path (sidebar tengah) --}}
-    @include('student.partials.course-list')
+    {{-- Sidebar tengah (default: course-list, bisa diganti di halaman tertentu) --}}
+    @hasSection('middle_sidebar')
+        @yield('middle_sidebar')
+    @else
+        @include('student.partials.course-list')
+    @endif
+
 
     {{-- Main content --}}
     <main class="flex-1 flex flex-col overflow-hidden px-10 py-10">
