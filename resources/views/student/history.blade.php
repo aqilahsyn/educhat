@@ -56,33 +56,23 @@
 
     {{-- 2) SIDEBAR KHUSUS HISTORY --}}
     <aside class="w-80 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col">
-        {{-- Header merah seperti mockup --}}
         <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
             <h1 class="text-sm font-semibold text-[#B8352E]">
                 Riwayat Percakapan
             </h1>
         </div>
 
-        {{-- Daftar sesi history --}}
         <div class="flex-1 overflow-y-auto">
-            @php
-                $sessions = [
-                    ['title' => 'History chat', 'subtitle' => 'SA · CLO 1'],
-                    ['title' => 'History chat', 'subtitle' => 'AP · CLO 2'],
-                    ['title' => 'History chat', 'subtitle' => 'AP Lanjutan · CLO 1'],
-                    ['title' => 'History chat', 'subtitle' => 'AK · CLO 1'],
-                ];
-            @endphp
+            @foreach($sessions as $session)
+                @php
+                    $active = $activeSession['id'] === $session['id'];
+                @endphp
 
-            @foreach($sessions as $i => $session)
-                @php $active = $i === 0; @endphp
-
-                <a href="#"
+                <a href="{{ route('history.show', $session['id']) }}"
                    class="flex items-center gap-3 px-6 py-4 border-b border-slate-100 dark:border-slate-800
                           {{ $active ? 'bg-[#B8352E] text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-800/60' }}">
-                    {{-- icon chat --}}
                     <div class="w-7 h-7 rounded-full flex items-center justify-center
-                                {{ $active ? 'bg-white/15' : 'bg-[#B8352E]/10 text-[#B8352E]' }}">
+                                {{ $active ? 'bg-white/15' : 'bg-[#B8352E]/10' }}">
                         <span class="text-xs {{ $active ? 'text-white' : 'text-[#B8352E]' }}">💬</span>
                     </div>
 
@@ -102,60 +92,59 @@
     {{-- 3) KOLOM TENGAH: CHAT --}}
     <main class="flex-1 flex flex-col border-r border-slate-100 dark:border-slate-800 px-8 py-6">
         {{-- Header chat --}}
-        <header class="flex items-center justify-between mb-4">
+        <header class="flex items-center justify-between bg-white dark:bg-slate-900 rounded-3xl px-6 py-4 mb-4 shadow-sm border border-slate-100 dark:border-slate-800">
             <div class="flex items-center gap-3">
-                <button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800">
+                <a href="{{ route('history') }}"
+                   class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800">
                     <span class="text-lg">&lt;</span>
-                </button>
+                </a>
 
                 <div class="flex flex-col">
                     <div class="flex items-center gap-2">
                         <span class="text-[#B8352E] text-lg">&lt;/&gt;</span>
                         <p class="text-sm font-semibold text-slate-900 dark:text-slate-50">
-                            History chat - SA
+                            {{ $activeSession['title'] }} - {{ $activeSession['course'] }}
                         </p>
                     </div>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">CLO 1</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        CLO {{ $activeSession['clo'] }}
+                    </p>
                 </div>
             </div>
 
             <button
-                class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800">
+                id="infoToggleBtn"
+                class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800"
+                type="button">
                 <span class="text-sm">📘</span>
             </button>
         </header>
 
         {{-- Daftar pesan --}}
         <div class="flex-1 overflow-y-auto space-y-4 pr-2 pt-2">
-            {{-- Bot --}}
-            <div class="flex items-start gap-3">
-                <div class="w-9 h-9 rounded-full bg-[#B8352E] flex items-center justify-center text-white text-sm">
-                    🤖
-                </div>
-                <div class="max-w-xl rounded-2xl bg-white dark:bg-slate-900 shadow-sm px-4 py-3 text-sm text-slate-800 dark:text-slate-100">
-                    <p>Halo Aqila! Ada yang bisa saya bantu?</p>
-                </div>
-            </div>
-
-            {{-- User --}}
-            <div class="flex items-start justify-end gap-3">
-                <div class="max-w-xl rounded-2xl bg-[#B8352E] text-white shadow-sm px-4 py-3 text-sm">
-                    <p>Halo Aqila! Ada yang bisa saya bantu?</p>
-                </div>
-                <div class="w-9 h-9 rounded-full bg-slate-300 flex items-center justify-center text-xs font-semibold">
-                    AH
-                </div>
-            </div>
-
-            {{-- Bot lagi --}}
-            <div class="flex items-start gap-3">
-                <div class="w-9 h-9 rounded-full bg-[#B8352E] flex items-center justify-center text-white text-sm">
-                    🤖
-                </div>
-                <div class="max-w-xl rounded-2xl bg-white dark:bg-slate-900 shadow-sm px-4 py-3 text-sm text-slate-800 dark:text-slate-100">
-                    <p>Ini contoh percakapan yang pernah terjadi pada sesi ini.</p>
-                </div>
-            </div>
+            @forelse($messages as $message)
+                @if($message['role'] === 'bot')
+                    <div class="flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-full bg-[#B8352E] flex items-center justify-center text-white text-sm">
+                            🤖
+                        </div>
+                        <div class="max-w-xl rounded-2xl bg-white dark:bg-slate-900 shadow-sm px-4 py-3 text-sm text-slate-800 dark:text-slate-100">
+                            <p>{{ $message['content'] }}</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="flex items-start justify-end gap-3">
+                        <div class="max-w-xl rounded-2xl bg-[#B8352E] text-white shadow-sm px-4 py-3 text-sm">
+                            <p>{{ $message['content'] }}</p>
+                        </div>
+                        <div class="w-9 h-9 rounded-full bg-slate-300 flex items-center justify-center text-xs font-semibold">
+                            AH
+                        </div>
+                    </div>
+                @endif
+            @empty
+                <p class="text-xs text-slate-400">Belum ada percakapan untuk sesi ini.</p>
+            @endforelse
         </div>
 
         {{-- Suggest + input --}}
@@ -192,15 +181,16 @@
     </main>
 
     {{-- 4) PANEL KANAN: MATA KULIAH --}}
-    <aside class="w-80 bg-white dark:bg-slate-900 flex flex-col">
-        <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
-            <p class="text-sm font-semibold text-[#B8352E]">Mata Kuliah</p>
-        </div>
+    <aside
+        id="cloInfoPanel"
+        class="w-80 bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm p-6">
+        <h2 class="text-sm font-semibold text-[#B8352E] mb-3">
+            Mata Kuliah
+        </h2>
 
-        <div class="flex-1 overflow-y-auto px-6 py-4 text-xs leading-relaxed text-slate-700 dark:text-slate-300 space-y-3">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam efficitur varius eros. Aenean lobortis ipsum ac turpis fringilla, vel sodales felis semper.</p>
-            <p>Curabitur convallis vel tortor quis egestas. Sed a tellus molestie, venenatis dui vitae, semper massa. Praesent bibendum non risus et ornare.</p>
-            <p>Pellentesque lorem vitae massa scelerisque lacinia. Integer tempus justo eget eros mollis, vel feugiat metus malesuada.</p>
+        <div class="text-xs leading-relaxed text-slate-700 dark:text-slate-300 space-y-3">
+            <p>{{ $infoText }}</p>
+            {{-- kalau mau, bisa tambah paragraf dummy lain --}}
         </div>
     </aside>
 
@@ -208,6 +198,3 @@
 
 </body>
 </html>
-
-
-

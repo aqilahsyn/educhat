@@ -42,7 +42,7 @@
         </aside>
 
         {{-- Main content --}}
-        <main class="flex-1 p-8">
+        <main class="flex-1 p-8 flex flex-col">
             @yield('content')
         </main>
     </div>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Student\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,3 +75,6 @@ Route::post('/logout', function () {
     session()->forget('auth_token');
     return redirect()->route('login');
 })->name('logout');
+
+Route::get('/history', [HistoryController::class, 'index'])->name('history');
+Route::get('/history/{id}', [HistoryController::class, 'show'])->name('history.show');

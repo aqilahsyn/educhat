@@ -1,8 +1,7 @@
 {{-- resources/views/student/partials/course-list.blade.php --}}
 @php
-    // bisa dikirim dari route, kalau nggak ada ya null
-    $currentCourse = $currentCourse ?? null; // angka: 1..4
-    $currentClo    = $currentClo ?? null;    // angka: 1..N
+    $currentCourse = $currentCourse ?? null; // 1..4
+    $currentClo    = $currentClo ?? null;    // 1..N
 
     $courses = [
         1 => 'Algoritma Pemrograman',
@@ -20,6 +19,7 @@
         2 => [
             1 => 'CLO 1: Rekursi',
             2 => 'CLO 2: Sorting & Searching',
+            3 => 'CLO 3'
         ],
         3 => [
             1 => 'CLO 1: Notasi Big-O',
@@ -29,7 +29,6 @@
         4 => [
             1 => 'CLO 1: Divide and Conquer',
             2 => 'CLO 2: Greedy',
-            3 => 'CLO 3: Dynamic Programming',
         ],
     ];
 @endphp
@@ -54,13 +53,11 @@
 
             <details class="group border-b border-slate-100 dark:border-slate-800" {{ $isActiveCourse ? 'open' : '' }}>
                 <summary class="flex items-center justify-between px-6 h-14 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60">
-                    <a href="{{ route('course.show', $id) }}"
-                       class="flex items-center gap-3 flex-1">
+                    <a href="{{ route('course.show', $id) }}" class="flex items-center gap-3 flex-1">
                         <div class="w-7 h-7 rounded-xl bg-[#B8352E]/10 flex items-center justify-center">
                             <span class="text-[13px] text-[#B8352E]">&lt;/&gt;</span>
                         </div>
-                        <span class="text-sm font-medium
-                                     {{ $isActiveCourse ? 'text-[#B8352E]' : 'text-slate-900 dark:text-slate-50' }}">
+                        <span class="text-sm font-medium {{ $isActiveCourse ? 'text-[#B8352E]' : 'text-slate-900 dark:text-slate-50' }}">
                             {{ $courseName }}
                         </span>
                     </a>
@@ -79,24 +76,29 @@
                             @endphp
 
                             <a href="{{ route('course.clo', ['course' => $id, 'clo' => $cloId]) }}"
-                               class="w-full flex items-center gap-3 text-sm font-medium
-                                      border rounded-xl px-4 py-2.5
-                                      transition-colors
+                                
+                               class="w-full flex items-center gap-3 text-sm font-medium px-4 py-2.5 rounded-xl transition-colors
                                       {{ $isActiveClo
-                                            ? 'border-[#B8352E] bg-[#B8352E]/10 text-[#B8352E]'
-                                            : 'text-[#B8352E] border-slate-200 dark:border-slate-700 hover:bg-[#B8352E]/10 dark:hover:bg-[#B8352E]/20' }}">
+                                            ? 'bg-[#B8352E] border-[#B8352E] text-white shadow-sm'
+                                            : 'border-slate-200 dark:border-slate-700 text-[#B8352E] hover:bg-[#B8352E]/10 dark:hover:bg-[#B8352E]/20' }}">
 
-                                @if ($cloId === 1)
-                                    <span class="text-base">🎓</span>
-                                @elseif ($cloId === 2)
-                                    <span class="text-base">📘</span>
-                                @elseif ($cloId === 3)
-                                    <span class="text-base">💬</span>
-                                @else
-                                    <span class="text-base">⭐</span>
-                                @endif
+                                {{-- ICON --}}
+                                <span class="text-base {{ $isActiveClo ? 'text-white' : 'text-[#B8352E]' }}">
+                                    @if ($cloId === 1)
+                                        🎓
+                                    @elseif ($cloId === 2)
+                                        📘
+                                    @elseif ($cloId === 3)
+                                        💬
+                                    @else
+                                        ⭐
+                                    @endif
+                                </span>
 
-                                <span>{{ $cloLabel }}</span>
+                                {{-- LABEL --}}
+                                <span class="{{ $isActiveClo ? 'text-white' : 'text-[#B8352E]' }}">
+                                    {{ $cloLabel }}
+                                </span>
                             </a>
                         @endforeach
                     </div>

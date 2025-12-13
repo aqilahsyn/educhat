@@ -12,9 +12,9 @@
     {{-- Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[#F4F7FB] font-sans text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+<body class="h-screen overflow-hidden bg-[#F4F7FB] font-sans text-slate-900 dark:bg-slate-950 dark:text-slate-100">
 
-<div class="flex h-screen">
+<div class="flex h-full">
     {{-- Sidebar ikon (kiri paling) --}}
     @include('student.partials.sidebar')
 
@@ -22,9 +22,12 @@
     @include('student.partials.course-list')
 
     {{-- Main content --}}
-    <main class="flex-1 overflow-y-auto px-10 py-10">
+    <main class="flex-1 flex flex-col overflow-hidden px-10 py-10">
         @yield('content')
     </main>
+
+
+
 </div>
 
 </body>
