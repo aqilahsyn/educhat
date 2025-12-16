@@ -104,8 +104,8 @@ Route::prefix('dosen')->name('dosen.')->group(function () {
 });
 
 // ------------------ ADMIN PAGES (TANPA AUTH DULU) ------------------
+use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\LearningPathController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
@@ -113,14 +113,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->name('dashboard');
 
     // ✅ COURSE DETAIL
-    Route::get('/course/{id}', function ($id) {
+    Route::get('/course/{course}', function (Request $request, $course) {
+        $courseId   = (int) $course;
+        $activeClo  = (int) $request->query('clo', 1);
+
         return view('admin.course', [
-            'currentCourse' => (int) $id
+            'currentCourse' => $courseId,
+            'courseId'      => $courseId,
+            'activeClo'     => $activeClo,
         ]);
     })->name('course.show');
 
+    // ✅ TAMBAH MATERI (HALAMAN BARU)
+    Route::get('/course/{course}/materi/create', function (Request $request, $course) {
+        $courseId = (int) $course;
+        $clo      = (int) $request->query('clo', 1);
+
+        return view('admin.materi-create', [
+            'currentCourse' => $courseId,
+            'courseId'      => $courseId,
+            'activeClo'     => $clo,
+            'clo'           => $clo,
+        ]);
+    })->name('materi.create');
+
 });
-
-
-
-

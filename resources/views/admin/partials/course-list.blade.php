@@ -1,6 +1,7 @@
 {{-- resources/views/admin/partials/course-list.blade.php --}}
 @php
-    $currentCourse = $currentCourse ?? null;
+    // ⬇️ PASTIKAN TIPE DATA SAMA
+    $currentCourse = isset($currentCourse) ? (int) $currentCourse : null;
 
     $courses = [
         1 => 'Algoritma Pemrograman',
@@ -25,12 +26,19 @@
     <div class="flex-1 overflow-y-auto">
         @foreach($courses as $id => $name)
             <a href="{{ route('admin.course.show', $id) }}"
-               class="flex items-center gap-3 px-6 h-14 border-b
-               {{ $currentCourse === $id ? 'bg-[#B8352E]/10 text-[#B8352E]' : 'hover:bg-slate-50' }}">
-                <div class="w-7 h-7 rounded-xl bg-[#B8352E]/10 flex items-center justify-center">
+               class="flex items-center gap-3 px-6 h-14 border-b transition
+               {{ $currentCourse === $id
+                    ? 'bg-[#B8352E]/10 text-[#B8352E] font-semibold'
+                    : 'text-slate-700 hover:bg-slate-50' }}">
+                
+                <div class="w-7 h-7 rounded-xl flex items-center justify-center
+                    {{ $currentCourse === $id
+                        ? 'bg-[#B8352E] text-white'
+                        : 'bg-[#B8352E]/10 text-[#B8352E]' }}">
                     &lt;/&gt;
                 </div>
-                <span class="text-sm font-medium">
+
+                <span class="text-sm">
                     {{ $name }}
                 </span>
             </a>
